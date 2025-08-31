@@ -1,0 +1,19 @@
+[project]
+name = "singaji-setu-agent"
+version = "0.1.0"
+description = "Audio transcription and Q/A generation app with Google Speech API and LangChain"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "ffmpeg-python>=0.2.0",
+    "google-cloud-speech>=2.33.0",
+    "google-cloud-storage>=3.3.0",
+    "langchain-core>=0.3.75",
+    "langchain-google-community>=2.0.7",
+    "langchain-google-genai>=2.1.10",
+    "librosa>=0.11.0",
+    "pydub>=0.25.1",
+    "python-dotenv>=1.1.1",
+    "soundfile>=0.13.1",
+    "streamlit>=1.49.1",
+]

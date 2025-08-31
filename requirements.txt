@@ -1,0 +1,10 @@
+streamlit
+google-cloud-speech
+langchain-google-genai
+langchain-core
+langchain-google-community
+pydub
+ffmpeg-python
+soundfile
+python-dotenv
+ffmpeg-python
