@@ -11,13 +11,28 @@ from ui.tabs import render_upload_tab, render_review_tab, render_payload_tab
 from utils.ui_components import apply_custom_styling
 
 # Import configuration
-from config.settings import APP_TITLE, APP_ICON, APP_LAYOUT
+from config.settings import APP_TITLE, APP_ICON, APP_LAYOUT, GCS_BUCKET_NAME, get_gcp_project_id, GCP_LOCATION, validate_environment
 
 
 def initialize_session_state():
     """Initialize all session state variables."""
+    # Validate environment variables first
+    if not validate_environment():
+        st.error("❌ Environment validation failed. Please check the console for missing variables.")
+        st.stop()
+    
     if "transcription_service" not in st.session_state:
-        st.session_state.transcription_service = TranscriptionService()
+        # Get GCP project ID from environment or service account
+        project_id = get_gcp_project_id()
+        if not project_id:
+            st.error("❌ GCP Project ID not found. Please set GCP_PROJECT_ID environment variable or check service account credentials.")
+            st.session_state.transcription_service = None
+        else:
+            st.session_state.transcription_service = TranscriptionService(
+                gcs_bucket_name=GCS_BUCKET_NAME,
+                gcp_project_id=project_id,
+                gcp_location=GCP_LOCATION
+            )
     if "gemini_service" not in st.session_state:
         st.session_state.gemini_service = GeminiService()
     if "transcript" not in st.session_state:

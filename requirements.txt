@@ -1,5 +1,6 @@
 streamlit
 google-cloud-speech
+google-cloud-storage
 langchain-google-genai
 langchain-core
 langchain-google-community

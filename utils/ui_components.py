@@ -1,6 +1,7 @@
 import streamlit as st
 from typing import Dict, Any
 
+
 def apply_custom_styling():
     """Apply custom CSS styling for the application."""
     theme_base = st.get_option("theme.base")
@@ -36,12 +37,10 @@ def apply_custom_styling():
         unsafe_allow_html=True,
     )
 
+
 def display_extra_details(gemini_result: Dict[str, Any]):
     """Display extra details found in the Gemini result in an organized way."""
-    if (
-        "extra_details" in gemini_result
-        and gemini_result["extra_details"]
-    ):
+    if "extra_details" in gemini_result and gemini_result["extra_details"]:
         st.subheader("🔍 Extra Details Found:")
         extra_details = gemini_result["extra_details"]
 
@@ -56,16 +55,49 @@ def display_extra_details(gemini_result: Dict[str, Any]):
         else:
             st.markdown(f"**Additional Information:** {extra_details}")
 
-def get_default_schema() -> Dict[str, str]:
-    """Get the default survey schema."""
+
+def get_default_schema() -> Dict[str, Any]:
+    """
+    Provides a default nested JSON schema for extracting details
+    from a farmer's interview.
+    """
     return {
-        "farmer_name": "string",
-        "village": "string",
-        "contact_number": "string",
-        "primary_crop": "string",
-        "land_size_acres": "number",
-        "soil_type": "string",
-        "main_challenges": ["list of strings"],
-        "interested_in_new_tech": "boolean",
-        "extra_details": "object (key-value pairs of additional information)",
+        "farmerDetails": {
+            "farmerName": "string (Full name of the farmer)",
+            "village": "string (Village, Tehsil, and District if available)",
+            "contactNumber": "string (10-digit mobile number, if provided)",
+            "farmingExperienceYears": "number (Number of years in farming)",
+            "householdSize": "number (Total number of family members)",
+        },
+        "farmDetails": {
+            "totalLandSizeAcres": "number (Total acres of land owned or farmed)",
+            "soilType": "string (e.g., 'Black', 'Red', 'Alluvial', 'Loam')",
+            "primaryCrops": [
+                "list of strings (Main crops grown, e.g., 'Wheat', 'Cotton')"
+            ],
+            "irrigationSource": "string (e.g., 'Canal', 'Well', 'Borewell', 'Rain-fed')",
+        },
+        "livestockDetails": {
+            "hasLivestock": "boolean (Does the farmer own any farm animals?)",
+            "animals": [
+                {
+                    "type": "string (e.g., 'Cow', 'Buffalo', 'Goat', 'Chicken')",
+                    "count": "number (The number of animals of this type)",
+                }
+            ],
+        },
+        "challengesAndNeeds": {
+            "mainChallenges": [
+                "list of strings (Primary difficulties faced, e.g., 'Pest attacks', 'Low water', 'Market price')"
+            ],
+            "interestedInNewTech": "boolean (Is the farmer open to trying new technology or methods?)",
+            "specificNeeds": [
+                "list of strings (Specific help they are looking for, e.g., 'Loan information', 'Better seeds')"
+            ],
+        },
+        "interviewMetadata": {
+            "interviewerName": "string (Name of the person conducting the interview)",
+            "interviewDate": "string (Date of the interview in YYYY-MM-DD format)",
+            "summary": "string (A brief, 2-3 sentence summary of the entire conversation)",
+        },
     }

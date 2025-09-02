@@ -7,7 +7,8 @@ from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional
 
 # Constants
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.0-flash"
+
 
 class GeminiService:
     """Handles intelligent JSON payload generation for farmer surveys."""
@@ -16,8 +17,8 @@ class GeminiService:
         self.llm = self._initialize_llm()
 
     def _initialize_llm(self) -> Optional[ChatGoogleGenerativeAI]:
-        if not os.getenv("GOOGLE_API_KEY"):
-            st.error("❌ Google API key not found. Please set it in your .env file.")
+        if not os.getenv("GEMINI_API_KEY"):
+            st.error("❌ Gemini API key not found. Please set it in your .env file.")
             return None
         try:
             return ChatGoogleGenerativeAI(model=GEMINI_MODEL, temperature=0.1)
