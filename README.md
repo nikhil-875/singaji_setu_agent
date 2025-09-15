@@ -21,8 +21,7 @@ singaji_setu_agent/
 │   ├── audio_processor.py          # Audio processing utilities
 │   └── ui_components.py            # UI styling and components
 ├── ui/
-│   ├── __init__.py
-│   └── tabs.py                     # Tab rendering functions
+│   └── __init__.py
 ├── requirements.txt                 # Python dependencies
 ├── pyproject.toml                  # Project configuration
 └── README.md                       # This file
@@ -79,20 +78,25 @@ singaji_setu_agent/
    streamlit run main.py
    ```
 
-2. **Upload Audio:**
-   - Go to the "Upload & Transcribe" tab
-   - Upload an audio file (WAV, MP3, M4A, FLAC)
-   - Click "Start Transcription"
+2. **Choose Your Workflow:**
+   - **Live Record Interview**: Record audio directly in your browser
+   - **Import Audio File**: Upload existing audio files (WAV, MP3, M4A, FLAC)
 
-3. **Review Transcript:**
-   - Switch to the "Review Transcript" tab
-   - Edit the transcript if needed
-   - Save your changes
+3. **Process Audio:**
+   - Record live audio or upload a file
+   - Click "Start Transcription" to convert audio to text
 
-4. **Generate Payload:**
-   - Go to the "Generate Survey Payload" tab
-   - Define your JSON schema
-   - Click "Generate Survey Payload"
+4. **Review & Edit:**
+   - Review the generated transcript
+   - Edit if needed and save changes
+
+5. **Generate Survey Data:**
+   - Use AI to analyze the transcript
+   - Generate structured JSON survey data
+
+6. **Export Results:**
+   - Download audio, transcript, and survey data
+   - View summary of processed information
 
 ## 🔧 Configuration
 
@@ -145,7 +149,7 @@ The AI automatically captures additional information found in transcripts that d
 - **UI Components**: Styling, extra details display, and common UI functions
 
 ### UI Layer
-- **Tab Components**: Modular tab rendering functions
+- **Workflow Components**: Modular workflow rendering functions
 - **Session Management**: Streamlit session state initialization
 
 ### Configuration Layer
