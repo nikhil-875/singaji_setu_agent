@@ -63,7 +63,7 @@ def render_review_tab():
         m_col1.metric("Total Time", f"{metrics['total_time']:.2f}s")
         m_col2.metric("Chunks Processed", metrics["chunks_processed"])
         
-    if st.session_state.get("transcript"):
+    if st.session_state.get("transcript") is not None:
         # Editable text area for transcript
         edited = st.text_area(
             "Edit Transcript (Save your changes before proceeding):",

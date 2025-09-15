@@ -4,9 +4,10 @@ import os
 import time
 import uuid
 from io import BytesIO
-from google.cloud import speech_v1p1beta1 as speech
+from pydub import AudioSegment
+from google.cloud import speech
 from google.cloud import storage
-from google.api_core.client_options import ClientOptions
+from google.api_core.client_options import ClientOptions  # noqa: F401
 from typing import Optional
 from config.settings import get_service_account_credentials
 
@@ -61,7 +62,16 @@ class TranscriptionService:
             bucket = self.storage_client.bucket(self.gcs_bucket_name)
             blob = bucket.blob(destination_blob_name)
             audio_bytes.seek(0)
-            blob.upload_from_file(audio_bytes, content_type="audio/wav")
+            # Infer content type from file extension; default to WAV
+            _, ext = os.path.splitext(destination_blob_name)
+            ext = ext.lower()
+            content_type = {
+                ".wav": "audio/wav",
+                ".mp3": "audio/mpeg",
+                ".m4a": "audio/mp4",
+                ".flac": "audio/flac",
+            }.get(ext, "audio/wav")
+            blob.upload_from_file(audio_bytes, content_type=content_type)
             return f"gs://{self.gcs_bucket_name}/{destination_blob_name}"
         except Exception as e:
             st.error(f"GCS Upload Failed: {e}")
@@ -177,16 +187,25 @@ class TranscriptionService:
             st.error("Clients not initialized. Cannot transcribe.")
             return None
 
-        # Upload the full file directly
+        # Upload the full file directly (normalize to WAV/LINEAR16 mono 16 kHz)
         unique_filename = f"interview-audio-{uuid.uuid4()}.wav"
         try:
-            # Convert uploaded file to BytesIO if needed
+            # Ensure we always upload normalized WAV regardless of original format
             if hasattr(uploaded_file, "read"):
-                file_buffer = BytesIO(uploaded_file.read())
+                source = uploaded_file
             else:
-                file_buffer = uploaded_file
+                source = BytesIO(uploaded_file)
 
-            gcs_uri = self._upload_to_gcs(file_buffer, unique_filename)
+            audio = (
+                AudioSegment.from_file(source)
+                .set_frame_rate(16000)
+                .set_channels(1)
+            )
+            normalized_wav = BytesIO()
+            audio.export(normalized_wav, format="wav")
+            normalized_wav.seek(0)
+
+            gcs_uri = self._upload_to_gcs(normalized_wav, unique_filename)
         except Exception as e:
             st.error(f"Failed to upload file: {e}")
             return None
@@ -196,6 +215,9 @@ class TranscriptionService:
             language_code=language_code,
             enable_automatic_punctuation=True,
             model="telephony",
+            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=16000,
+            audio_channel_count=1,
         )
 
         audio = speech.RecognitionAudio(uri=gcs_uri)

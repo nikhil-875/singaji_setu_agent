@@ -4,8 +4,11 @@ import streamlit as st
 from services.transcription_service import TranscriptionService
 from services.gemini_service import GeminiService
 
+# main.py - Add these imports
+
 # Import UI components
 from ui.tabs import render_upload_tab, render_review_tab, render_payload_tab
+from ui.live_tab import render_live_tab
 
 # Import utilities
 from utils.ui_components import apply_custom_styling
@@ -67,8 +70,9 @@ def main():
         "**1. Upload & Transcribe** 🎙️",
         "**2. Review Transcript** 📜",
         "**3. Generate Survey Payload** 🤖",
+        "**4. Live Transcription (Beta)** 🔴",
     ]
-    tab1, tab2, tab3 = st.tabs(tab_labels)
+    tab1, tab2, tab3, tab4 = st.tabs(tab_labels)
 
     # Render tab content
     with tab1:
@@ -79,6 +83,9 @@ def main():
 
     with tab3:
         render_payload_tab()
+
+    with tab4:
+        render_live_tab()
 
 
 if __name__ == "__main__":
