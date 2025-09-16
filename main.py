@@ -23,8 +23,6 @@ from config.settings import (
 )
 
 # --- HELPER FUNCTIONS ---
-
-
 def format_time(seconds: float) -> str:
     """Format seconds into MM:SS format."""
     seconds = max(0, int(seconds))
@@ -125,7 +123,7 @@ def run_analysis():
     """Runs the Gemini analysis on the transcript."""
     transcript = st.session_state.get("edited_transcript")
     if transcript:
-        with st.spinner("🚀 Analyzing transcript with Gemini AI..."):
+        # with st.spinner("🚀 Analyzing transcript with Gemini AI..."):
             try:
                 schema = get_default_schema()
                 schema_json = json.dumps(schema, indent=2)
